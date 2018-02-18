@@ -36,4 +36,14 @@ public class ErrorHandlers {
 		);
 	}
 
+	@ExceptionHandler(MissingRequestParametersException.class)
+	public ResponseEntity<Validatable.ValidationErrors> handleInvalidCommandException(MissingRequestParametersException ex) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.set(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON);
+		return new ResponseEntity<>(
+				ex.getErrors(),
+				headers,
+				HttpStatus.UNPROCESSABLE_ENTITY
+		);
+	}
 }
