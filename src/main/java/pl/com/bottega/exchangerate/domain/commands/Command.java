@@ -72,7 +72,7 @@ public interface Command {
     default void validateCurrency(Validatable.ValidationErrors errors,String field, String value) {
 
             if (value == null || value.length() == 0) {
-                errors.add(field, "can't be empty");
+                errors.add(field, "is required");
             }
             try {
             String regex = "[A-Z]+[A-Z]+[A-Z]";

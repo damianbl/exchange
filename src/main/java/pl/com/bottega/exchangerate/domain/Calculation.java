@@ -40,7 +40,7 @@ public class Calculation {
             if(exchangeRate.isPresent()){
                 calculatedAmount = amount.divide(exchangeRate.get().getRate(),2, RoundingMode.HALF_DOWN);
             } else {
-                throw new NoRateException("Rate not found");
+                throw new NoRateException();
             }
         }
 
@@ -50,7 +50,7 @@ public class Calculation {
             if(exchangeRate.isPresent()){
                 calculatedAmount = amount.multiply(exchangeRate.get().getRate());
             } else {
-                throw new NoRateException("Rate not found");
+                throw new NoRateException();
             }
 
         }
@@ -61,7 +61,7 @@ public class Calculation {
                 calculatedAmount = (amount.multiply(exchangeRateFrom.get().getRate())).divide(exchangeRateTo.get().getRate());
 
             }else {
-                throw new NoRateException("Rate not found");
+                throw new NoRateException();
             }
         }
         if(cmd.getTo().equals(cmd.getFrom())) {

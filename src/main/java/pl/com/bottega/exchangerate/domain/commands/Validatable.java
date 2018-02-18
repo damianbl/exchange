@@ -18,6 +18,9 @@ public interface Validatable {
             fieldErrors.add(errorMessage);
             errors.putIfAbsent(fieldName, fieldErrors);
         }
+        public boolean any() {
+            return !errors.isEmpty();
+        }
 
         public boolean isValid() {
             return errors.isEmpty();
