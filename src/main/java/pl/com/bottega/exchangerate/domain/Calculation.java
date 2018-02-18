@@ -27,6 +27,10 @@ public class Calculation {
 
     public Calculation(CalculationCommand cmd, ExchangeRateRepository exchangeRateRepository) {
         this.cmd = cmd;
+        this.from = cmd.getFrom();
+        this.to = cmd.getTo();
+        this.amount = cmd.getAmount();
+        this.date = cmd.getDate();
         this.exchangeRateRepository = exchangeRateRepository;
     }
 
@@ -35,36 +39,36 @@ public class Calculation {
 
     public Calculation calculate(String from, String to, BigDecimal amount, String date) {
 
-        if (mainCurrency.equals(cmd.getFrom())){
+        if (mainCurrency.equals(cmd.getFrom())) {
             Optional<ExchangeRate> exchangeRate = exchangeRateRepository.getExchangeCurrency(date, to);
-            if(exchangeRate.isPresent()){
-                calculatedAmount = amount.divide(exchangeRate.get().getRate(),2, RoundingMode.HALF_DOWN);
+            if (exchangeRate.isPresent()) {
+                calculatedAmount = amount.divide(exchangeRate.get().getRate(), 2, RoundingMode.HALF_DOWN);
             } else {
                 throw new NoRateException();
             }
         }
 
-        if(mainCurrency.equals(cmd.getTo())) {
+        if (mainCurrency.equals(cmd.getTo())) {
             Optional<ExchangeRate> exchangeRate = exchangeRateRepository.getExchangeCurrency(cmd.getDate(), cmd.getFrom());
 
-            if(exchangeRate.isPresent()){
+            if (exchangeRate.isPresent()) {
                 calculatedAmount = amount.multiply(exchangeRate.get().getRate());
             } else {
                 throw new NoRateException();
             }
 
         }
-        if((!mainCurrency.equals(cmd.getTo())) && (!mainCurrency.equals(cmd.getFrom()))) {
-            Optional<ExchangeRate> exchangeRateTo = exchangeRateRepository.getExchangeCurrency(cmd.getDate(),cmd.getTo());
-            Optional<ExchangeRate> exchangeRateFrom = exchangeRateRepository.getExchangeCurrency(cmd.getDate(),cmd.getFrom());
-            if(exchangeRateFrom.isPresent() && exchangeRateTo.isPresent()) {
+        if ((!mainCurrency.equals(cmd.getTo())) && (!mainCurrency.equals(cmd.getFrom()))) {
+            Optional<ExchangeRate> exchangeRateTo = exchangeRateRepository.getExchangeCurrency(cmd.getDate(), cmd.getTo());
+            Optional<ExchangeRate> exchangeRateFrom = exchangeRateRepository.getExchangeCurrency(cmd.getDate(), cmd.getFrom());
+            if (exchangeRateFrom.isPresent() && exchangeRateTo.isPresent()) {
                 calculatedAmount = (amount.multiply(exchangeRateFrom.get().getRate())).divide(exchangeRateTo.get().getRate());
 
-            }else {
+            } else {
                 throw new NoRateException();
             }
         }
-        if(cmd.getTo().equals(cmd.getFrom())) {
+        if (cmd.getTo().equals(cmd.getFrom())) {
             throw new InvalidCommandException("mus be");
 
         }
